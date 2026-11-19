@@ -37,20 +37,43 @@ def verificar_totais(A, x, b):
 
 
 def custo_previsto(q_previsto, x):
-    """(c) Custo total estimado do próximo mês."""
+    """(c) Custo total estimado do próximo mês: soma de quantidade × custo unitário."""
+    q_previsto = np.asarray(q_previsto, dtype=float)
+    x = np.asarray(x, dtype=float)
+    if q_previsto.shape != x.shape:
+        raise ValueError("q_previsto e x devem ter o mesmo tamanho.")
     return float(np.dot(q_previsto, x))
 
 
 def melhor_reducao(q_previsto, x, servicos, reducao=0.20, meses=12):
     """(d) Reduz em `reducao` o uso de UM serviço; escolhe o de maior economia.
 
+    A economia ao reduzir uma fração f do serviço i é f × (quantidade_i × custo_i),
+    ou seja, o que importa é o gasto absoluto do serviço, não o preço unitário.
+    Em caso de empate, é escolhido o primeiro serviço da lista.
+
     Retorna dicionário com economias por serviço, serviço escolhido,
-    economia mensal, novo custo total e economia acumulada em `meses` meses.
+    economia mensal, novo custo total, economia acumulada em `meses` meses
+    e `cenarios` (DataFrame com o resultado de reduzir cada serviço).
     """
+    if not 0 <= reducao <= 1:
+        raise ValueError("reducao deve estar entre 0 e 1.")
+    if not (len(q_previsto) == len(x) == len(servicos)):
+        raise ValueError("q_previsto, x e servicos devem ter o mesmo tamanho.")
+
     custos = np.asarray(q_previsto, dtype=float) * np.asarray(x, dtype=float)
     economias = reducao * custos
     i = int(np.argmax(economias))
     total = float(custos.sum())
+    cenarios = pd.DataFrame(
+        {
+            "custo_atual_servico": custos,
+            "economia_mensal": economias,
+            "novo_total": total - economias,
+            "economia_acumulada": economias * meses,
+        },
+        index=list(servicos),
+    ).sort_values("economia_mensal", ascending=False)
     return {
         "economias": pd.Series(economias, index=servicos),
         "servico": servicos[i],
@@ -58,4 +81,5 @@ def melhor_reducao(q_previsto, x, servicos, reducao=0.20, meses=12):
         "custo_atual": total,
         "novo_total": total - float(economias[i]),
         "economia_acumulada": float(economias[i]) * meses,
+        "cenarios": cenarios,
     }
