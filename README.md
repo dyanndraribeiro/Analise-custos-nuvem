@@ -66,6 +66,22 @@ pytest
 | Eduardo | Previsão e economia (itens c e d) |
 | Guilherme | Notebook, interpretações e limitações |
 
-## Resultados e limitações
+## Resultados
 
-_Preencher após rodar o notebook: custos unitários, erros da verificação, custo previsto, serviço escolhido e economia._
+Custos unitários (item a), obtidos por eliminação de Gauss com pivoteamento parcial (conferidos com LU):
+
+| Serviço | Custo unitário |
+|---|---|
+| CPU (hora) | 2,50 |
+| Armazenamento (TB) | 15,00 |
+| Banco de dados (hora) | 4,00 |
+| Transferência (GB) | 0,80 |
+| Funções (mil) | 1,50 |
+
+- **(b)** Os totais recalculados reproduzem os cinco valores originais (1255, 1479, 1695, 1881 e 2060), com erro zero.
+- **(c)** Custo total previsto para o mês 6: **2371,00**.
+- **(d)** Reduzir 20% do armazenamento dá a maior economia: **135,00 por mês**, novo custo total **2236,00**, e **1620,00** em 12 meses.
+
+## Limitações
+
+_Preencher: arredondamento em ponto flutuante, condicionamento da matriz e o fato de o modelo assumir custo unitário constante e linear._
