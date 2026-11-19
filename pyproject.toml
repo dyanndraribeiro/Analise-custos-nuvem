@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "custos-nuvem"
+version = "0.1.0"
+description = "Métodos numéricos aplicados à análise de custos de serviços em nuvem (Projeto 2ºGQ - Métodos Numéricos)"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "pandas",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+notebook = ["jupyter", "matplotlib"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
